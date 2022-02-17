@@ -16,13 +16,26 @@ const CreateNewChatBoxController = async (req, res) => {
         type: "error",
       });
     }
-    //need to check if a chatbox already available with these sender and receiver ids
+    //check if a chatbox already available with these sender and receiver ids
+    const chatAlreadyAvailable = await ChatsCollection.find({
+      members: {
+        $all: [id, member],
+      },
+    });
+    if (chatAlreadyAvailable.length > 0) {
+      return res.send({
+        type: "success",
+        msg: "Chat already available",
+        chatCreated: chatAlreadyAvailable,
+      });
+    }
 
     const membersArray = [id, member];
     const chatCreated = await ChatsCollection.create({
       isGroupChat: false,
       members: membersArray,
     });
+
     return res.send({ msg: "New Chat created", type: "success", chatCreated });
   } catch (err) {
     return res.status(500).send({ msg: err.message, type: "error" });

@@ -3,8 +3,10 @@ const GetChatMsgsController = require("../controllers/messageControllers/GetChat
 
 const router = require("express").Router();
 
+// create msg
 router.post("/create", CreateNewMsgController);
 
+//get all msgs of a chat
 router.get("/:chatBoxId", GetChatMsgsController);
 
 module.exports = router;

@@ -7,12 +7,12 @@ const chatSchema = mongoose.Schema({
   members: [
     {
       type: mongoose.Types.ObjectId,
-      ref: "users",
+      ref: "UsersCollection",
     },
   ],
   adminUser: {
     type: mongoose.Types.ObjectId,
-    ref: "users",
+    ref: "UsersCollection",
     default: undefined,
   },
   groupName: {
