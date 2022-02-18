@@ -10,6 +10,10 @@ const chatSchema = mongoose.Schema({
       ref: "UsersCollection",
     },
   ],
+  lastMsgId: {
+    type: mongoose.Types.ObjectId,
+    ref: "MessagesCollection",
+  },
   adminUser: {
     type: mongoose.Types.ObjectId,
     ref: "UsersCollection",

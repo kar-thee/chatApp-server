@@ -9,7 +9,9 @@ const GetAllChatBoxesController = async (req, res) => {
       members: {
         $in: [userId],
       },
-    }).populate("members", "_id name email");
+    })
+      .populate("members", "_id name email")
+      .populate("lastMsgId");
 
     const chatBoxes = allChats.map((chatObj) =>
       chatObj.isGroupChat === true
@@ -19,6 +21,7 @@ const GetAllChatBoxesController = async (req, res) => {
             members: chatObj.members,
             chatName: chatObj.groupName,
             adminUser: chatObj.adminUser,
+            lastMsg: chatObj.lastMsgId,
           }
         : {
             id: chatObj._id,
@@ -27,6 +30,7 @@ const GetAllChatBoxesController = async (req, res) => {
             chatName: chatObj.members.find(
               (memberObj) => !memberObj._id.equals(userId)
             )["name"],
+            lastMsg: chatObj.lastMsgId,
           }
     );
     res.send({

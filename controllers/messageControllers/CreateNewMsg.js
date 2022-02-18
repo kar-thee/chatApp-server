@@ -1,3 +1,4 @@
+const ChatsCollection = require("../../models/Chats");
 const MessagesCollection = require("../../models/Messages");
 
 const CreateNewMsgController = async (req, res) => {
@@ -15,12 +16,22 @@ const CreateNewMsgController = async (req, res) => {
         type: "error",
       });
     }
+    //check chatBox exists and add msgId to chatBox's lastMsg
+    const chatBoxExists = await ChatsCollection.findById(chatBox);
+    if (!chatBoxExists) {
+      return res
+        .status(404)
+        .send({ type: "error", msg: "No Such ChatBox available" });
+    }
 
     const msgPosted = await MessagesCollection.create({
       sender,
       content,
       chatBox,
     });
+
+    chatBoxExists.lastMsgId = msgPosted._id;
+    await chatBoxExists.save();
 
     res.send({ type: "success", msg: "Message sent", msgPosted });
   } catch (err) {
