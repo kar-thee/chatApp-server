@@ -4,14 +4,14 @@ const MessageSchema = mongoose.Schema(
   {
     sender: {
       type: mongoose.Types.ObjectId,
-      ref: "users",
+      ref: "UsersCollection",
     },
     content: {
       type: String,
     },
     chatBox: {
       type: mongoose.Types.ObjectId,
-      ref: "chats",
+      ref: "ChatsCollection",
     },
   },
   { timestamps: { createdAt: true, updatedAt: false } }

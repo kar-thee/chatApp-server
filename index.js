@@ -17,16 +17,23 @@ const io = new Server(httpServer, {
 });
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 const userRoutes = require("./routes/userRoutes");
 const chatBoxRoutes = require("./routes/chatBoxRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const profileRoutes = require("./routes/profileRoutes");
+
 const authCheckMiddleware = require("./middlewares/authCheck");
 
 app.use("/api/users", userRoutes);
 app.use("/api/chats", authCheckMiddleware, chatBoxRoutes);
 app.use("/api/messages", authCheckMiddleware, messageRoutes);
+app.use("/api/profile", authCheckMiddleware, profileRoutes);
 
 io.on("connection", (socket) => {
   // here all socket io events

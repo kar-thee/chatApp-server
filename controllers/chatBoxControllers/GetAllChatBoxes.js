@@ -1,10 +1,14 @@
 const ChatsCollection = require("../../models/Chats");
-const mongoose = require("mongoose");
+const UsersCollection = require("../../models/Users");
 
 const GetAllChatBoxesController = async (req, res) => {
   const { userId } = req.params;
 
   try {
+    const userFound = await UsersCollection.findById(userId);
+    if (!userFound) {
+      return res.status(404).send({ msg: "No user Found", type: "error" });
+    }
     const allChats = await ChatsCollection.find({
       members: {
         $in: [userId],
