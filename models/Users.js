@@ -28,6 +28,9 @@ const userSchema = mongoose.Schema({
   },
 });
 
+//creating search index so that we can use $text in find()
+userSchema.index({ name: "text", email: "text" }, { default_language: "none" });
+
 const UsersCollection = mongoose.model("UsersCollection", userSchema, "users");
 
 module.exports = UsersCollection;

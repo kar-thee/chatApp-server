@@ -36,7 +36,11 @@ const CreateNewChatBoxController = async (req, res) => {
       members: membersArray,
     });
 
-    return res.send({ msg: "New Chat created", type: "success", chatCreated });
+    return res.send({
+      msg: "New Chat created",
+      type: "success",
+      chatCreated: [chatCreated],
+    });
   } catch (err) {
     return res.status(500).send({ msg: err.message, type: "error" });
   }

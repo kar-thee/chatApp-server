@@ -15,7 +15,8 @@ const GetAllChatBoxesController = async (req, res) => {
       },
     })
       .populate("members", "_id name email")
-      .populate("lastMsgId");
+      .populate("lastMsgId")
+      .sort({ updatedAt: -1 });
 
     const chatBoxes = allChats.map((chatObj) =>
       chatObj.isGroupChat === true
@@ -25,6 +26,7 @@ const GetAllChatBoxesController = async (req, res) => {
             members: chatObj.members,
             chatName: chatObj.groupName,
             adminUser: chatObj.adminUser,
+            // lastMsgId is populated one - dontForget
             lastMsg: chatObj.lastMsgId,
           }
         : {
@@ -34,6 +36,7 @@ const GetAllChatBoxesController = async (req, res) => {
             chatName: chatObj.members.find(
               (memberObj) => !memberObj._id.equals(userId)
             )["name"],
+            // lastMsgId is populated one - dontForget
             lastMsg: chatObj.lastMsgId,
           }
     );
