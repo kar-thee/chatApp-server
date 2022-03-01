@@ -1,4 +1,5 @@
 const ChatsCollection = require("../../models/Chats");
+const MessagesCollection = require("../../models/Messages");
 
 const CreateNewChatBoxController = async (req, res) => {
   const { member } = req.body;
@@ -21,6 +22,7 @@ const CreateNewChatBoxController = async (req, res) => {
       members: {
         $all: [id, member],
       },
+      isGroupChat: false,
     });
     if (chatAlreadyAvailable.length > 0) {
       return res.send({
@@ -34,6 +36,27 @@ const CreateNewChatBoxController = async (req, res) => {
     const chatCreated = await ChatsCollection.create({
       isGroupChat: false,
       members: membersArray,
+    });
+
+    //here msg from both users like `Hi`
+    [id, member].forEach(async (senderId, ind) => {
+      const chatBox = chatCreated._id;
+      const sender = senderId;
+      const content = "Hi";
+      try {
+        const msgPosted = await MessagesCollection.create({
+          sender,
+          content,
+          chatBox,
+        });
+        //saving time by saving only last users msg as lastMsg
+        if (ind % 2 === 0) {
+          chatBoxExists.lastMsgId = msgPosted._id;
+          await chatBoxExists.save();
+        }
+      } catch (err) {
+        return res.status(500).send({ msg: err.message, type: "error" });
+      }
     });
 
     return res.send({

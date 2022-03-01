@@ -1,4 +1,5 @@
 const ChatsCollection = require("../../models/Chats");
+const MessagesCollection = require("../../models/Messages");
 
 const CreateGroupChatController = async (req, res) => {
   const { members, adminUser, groupName } = req.body;
@@ -21,6 +22,27 @@ const CreateGroupChatController = async (req, res) => {
       members: membersArray,
       adminUser,
       groupName,
+    });
+
+    //here we create first msg for all users
+    membersArray.forEach(async (senderId, ind) => {
+      const chatBox = chatCreated._id;
+      const sender = senderId;
+      const content = "Hi";
+      try {
+        const msgPosted = await MessagesCollection.create({
+          sender,
+          content,
+          chatBox,
+        });
+        //saving time by saving only last users msg as lastMsg
+        if (ind === membersArray.length) {
+          chatBoxExists.lastMsgId = msgPosted._id;
+          await chatBoxExists.save();
+        }
+      } catch (err) {
+        return res.status(500).send({ msg: err.message, type: "error" });
+      }
     });
 
     return res.send({
