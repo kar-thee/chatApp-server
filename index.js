@@ -34,8 +34,9 @@ app.use("/api/chats", authCheckMiddleware, chatBoxRoutes);
 app.use("/api/messages", authCheckMiddleware, messageRoutes);
 app.use("/api/profile", authCheckMiddleware, profileRoutes);
 
+//the below array stores all userObjs with socket id
 let usersArray = [];
-
+//socket.io events below :
 io.on("connection", (socket) => {
   //updateOnlineUsers for every new connection
   io.emit("updatedOnlineUsers", usersArray);
@@ -76,23 +77,37 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMsg", (sentMsgObj) => {
-    const { msgObj, senderId, chatId, receiverObj } = sentMsgObj;
-    const receiverSocket = usersArray.find(
-      (userObj) => receiverObj._id === userObj.userId
-    );
-
-    if (!receiverSocket) {
+    const { msgObj, senderId, chatId, receiverObjArray } = sentMsgObj;
+    //the below array will help in storing all userObj that are online/have socket id
+    let receiverSocketArray = [];
+    receiverObjArray.forEach((receiverObj) => {
+      //if obj is online we return the obj
+      let receiverSocket = usersArray.find(
+        (userObj) => receiverObj._id === userObj.userId
+      );
+      //the receiverSocketArray is updated if receiverSocket present
+      receiverSocketArray = receiverSocket
+        ? [...receiverSocketArray, receiverSocket]
+        : receiverSocketArray;
+    });
+    //if array empty that means receiver not online /has socket id attached
+    if (!receiverSocketArray || receiverSocketArray.length < 1) {
       //no receiver found, so real time communication not needed
       return;
     }
-    if (receiverSocket) {
+    //if array is not empty
+    if (receiverSocketArray.length > 0) {
       //now emit new event and send the msg to the receiver
-      //sending privateMsg
-      io.to(receiverSocket.socketId).emit("receivedMsg", {
-        msgObj,
-        senderId,
-        chatId,
-        receiverObj,
+      //sending msg
+      //using forEach we send to all users in receiverSocketArray
+      //either group or private chat
+      receiverSocketArray.forEach((receiverSocket) => {
+        io.to(receiverSocket.socketId).emit("receivedMsg", {
+          msgObj,
+          senderId,
+          chatId,
+          receiverSocket,
+        });
       });
     }
   });
