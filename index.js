@@ -18,7 +18,7 @@ const io = new Server(httpServer, {
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://chatapp-karthee.netlify.app/",
+    origin: "https://chatapp-karthee.netlify.app",
   })
 );
 
