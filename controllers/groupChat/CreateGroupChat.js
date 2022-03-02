@@ -10,12 +10,13 @@ const CreateGroupChatController = async (req, res) => {
   //groupName =string
 
   try {
-    if (members.length < 1 || !members || !id) {
+    if (members.length < 1 || !members || !id || !groupName || !adminUser) {
       return res
         .status(404)
         .send({ msg: "No empty values allowed", type: "error" });
     }
-
+    //here adding current user's id also with member
+    //i.e group creator
     const membersArray = [id, ...members];
     const chatCreated = await ChatsCollection.create({
       isGroupChat: true,
