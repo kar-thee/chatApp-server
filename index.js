@@ -11,14 +11,14 @@ const dbConnect = require("./db/dbConnect");
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://chatapp-karthee.netlify.app",
   },
 });
 
 app.use(express.json());
 app.use(
   cors({
-    origin: "*",
+    origin: "https://chatapp-karthee.netlify.app/",
   })
 );
 
