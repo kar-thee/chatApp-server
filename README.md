@@ -11,7 +11,7 @@ a backend server application developed with Expressjs (part of full Stack MERN A
 ## `Server Info`
  <li>Implemented Socket.io http-Server with Express App-Server</li>
  <li>Implemented Private and Group Chat Features</li>
- <li>Implemented Search User Feature (both Partial and full Text Search) with MongoDB Text Search (creating Search Index in Users collection) and also using Regex</li>
+ <li>Implemented Search User Feature (both Partial and full Text Search) with MongoDB Text Search (created Search Index in Users collection) and also using Regex</li>
  <li>cors enabled with respective origin for both Express and Socket io servers</li>
  <li>CRUD operations developed for -> Chats and Messages</li>
  <li>Implemented User-Authentication with jwt</li>
